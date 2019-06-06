@@ -28,6 +28,12 @@ function returnRandomProficiencies(count) {
 
 };
 
+function addItemXTimes(item, ammount){
+  for(x = ammount; x > 0; x--){
+    equipment.tools.push(weapons.simpleWeapons.javelin);
+  };
+}
+
 
 function populateEquipment(chaClass) {
 
@@ -47,14 +53,45 @@ function populateEquipment(chaClass) {
             equipment.weapons[1] = utils.returnRandomArrayItem([weaponsAndShields.martialMeleeWeapons.rapier, weaponsAndShields.martialMeleeWeapons.longsword]);
 
             break;
-        default:
-
-    }
 
 
-    return equipment;
+        case chaClass === "barbarian":
+            equipment.armors = armors.lightArmor.no_armor;
+            equipment.tools.push(toolsAndEquipment.equipmentPacks.explorersPack);
+            for(x = 4; x > 0; x--){equipment.tools.push(weaponsAndShields.simpleWeapons.javelin);};
 
-};
+            if(utils.returnRandomNumberInRange(0,1) === 0){
+              for(x = 2; x > 0; x--){equipment.weapons.push(weaponsAndShields.simpleWeapons.handaxe);};
+            }
+            else{
+
+              let max = Object.values(weaponsAndShields.simpleWeapons).length;
+              let randomSimpleWeapon = Object.values(weaponsAndShields.simpleWeapons)[utils.returnRandomNumberInRange(0, max)];
+
+              equipment.weapons.push(randomSimpleWeapon);
+
+            };
+
+            if(utils.returnRandomNumberInRange(0,1) === 0){
+              equipment.weapons.push(weaponsAndShields.martialMeleeWeapons.greataxe);
+            }
+            else{
+              let max = Object.values(weaponsAndShields.martialMeleeWeapons).length;
+              let randomMartialWeapon = Object.values(weaponsAndShields.martialMeleeWeapons)[utils.returnRandomNumberInRange(0, max)];
+
+              equipment.weapons.push(randomMartialWeapon);
+            }
+
+              break;
+
+              default:equipment.errmsg = "opps something  went wrong in the bard quipment switch statement, better fix that!"
+
+
+            };
+
+                return equipment;
+
+    };
 
 
 
@@ -86,7 +123,7 @@ function createBarbarian() {
         this.hitDie = 12,
         this.savingThrows = ["str", "dex"],
 
-        this.equipment = [],
+        this.equipment = populateEquipment(this.name),
         this.armorProficiencies = [],
         this.weaponProficiencies = [],
         this.toolProficiencies = [],
@@ -261,7 +298,8 @@ function createWizard() {
 //            ];
 
            classList = [
-                        new createBard(),
+                        new createBard()
+                        // new createBarbarian()
 
                       ];
 

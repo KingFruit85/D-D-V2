@@ -282,6 +282,10 @@ const martialRangedWeapons = {
 
 }
 
+
+
+
+
 exports.simpleWeapons = simpleWeapons;
 exports.simpleRangedWeapons = simpleRangedWeapons;
 exports.martialMeleeWeapons = martialMeleeWeapons;

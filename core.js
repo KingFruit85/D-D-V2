@@ -61,7 +61,7 @@ function returnRandomAlignment() {
 
 
 
-function returnCharacterAge(character){
+function returnCharacterAge(){
 
   switch (true) {
     case character.race === "Dragonborn": character.age = utils.returnRandomNumberInRange(15,80);break;
@@ -363,9 +363,9 @@ function returnRandomCharacterClass() {
 
 
 // TODO: pull from bigger list in new js file
-const maleFirstNames = ["Chris", "Ed", "Ralph"];
-const femaleFirstNames = ["Magda", "Kelly", "Holly"];
-const surnames = ["Long", "Araniseli", "Stringer"];
+const maleFirstNames = ["Chris", "Adam", "Wim", "Ali"];
+const femaleFirstNames = ["Magda", "Kelly", "Holly", "Zifa"];
+const surnames = ["Long", "Mistiaen", "Abildgaard", "Halil", "C.O.C.A.I.N.E"];
 
 
 
@@ -415,6 +415,14 @@ function returnAbilityScorePreference (characterClass) {
 
 };
 
+
+//calculates an ability score's modifier
+function returnAbilityScoreModifier(stat){
+
+  return Math.floor( ( stat - 10 ) / 2 );
+
+}
+
 //Returns an array of abilityscores reordered in prefrence on the class argument
 
 function returnAbilityScores(characterClass) {
@@ -425,11 +433,22 @@ function returnAbilityScores(characterClass) {
     let characterAbilityScores = {};
 
     characterAbilityScores.str = abilityScores[abilityScoreOrder.indexOf("str")];
+    characterAbilityScores.strMod = returnAbilityScoreModifier(characterAbilityScores.str);
+
     characterAbilityScores.con = abilityScores[abilityScoreOrder.indexOf("con")];
+    characterAbilityScores.conMod = returnAbilityScoreModifier(characterAbilityScores.con);
+
     characterAbilityScores.dex = abilityScores[abilityScoreOrder.indexOf("dex")];
+    characterAbilityScores.dexMod = returnAbilityScoreModifier(characterAbilityScores.dex);
+
     characterAbilityScores.int = abilityScores[abilityScoreOrder.indexOf("int")];
+    characterAbilityScores.intMod = returnAbilityScoreModifier(characterAbilityScores.int);
+
     characterAbilityScores.wis = abilityScores[abilityScoreOrder.indexOf("wis")];
+    characterAbilityScores.wisMod = returnAbilityScoreModifier(characterAbilityScores.wis);
+
     characterAbilityScores.cha = abilityScores[abilityScoreOrder.indexOf("cha")];
+    characterAbilityScores.chaMod = returnAbilityScoreModifier(characterAbilityScores.cha);
 
     return characterAbilityScores;
 
@@ -443,15 +462,14 @@ function returnRandomRace() {
 };
 
 
-function returnHitpoints(chaClass){
-  switch (true) {
-    case chaClass === "bard": return (8 + this.abilityScores.con);
 
-      break;
-    default:
+function calculateModifier(abilityScores) {
+  for (var key in abilityScores) {
 
-  }
+    console.log("score" + abilityScores[key] + "Modifier" + returnAbilityScoreModifier(abilityScores[key]));
 }
+}
+
 
 
 //NewCharacter Construtor
@@ -466,21 +484,24 @@ function NewCharacter(){
   this.alignment = returnRandomAlignment();
   this.abilityScores = returnAbilityScores(this.characterClass);
   applySubraceBonuses(this);
-  returnCharacterAge(this)
-  returnHitpoints("bard")
-
+  returnCharacterAge(this);
 
   return this
 
 
 };
 
+function test(char, stat, ammount) {
 
+  char.abilityScores[stat] += ammount;
+  char.abilityScores.strMod = returnAbilityScoreModifier(x.abilityScores.str)
+  console.log("======/======"); //for testing
+  console.log(x.abilityScores)
+  console.log("======/======");
+  return x.abilityScores
 
+}
 
+x = new NewCharacter();
 
-
-
-
-console.log(JSON.stringify(new NewCharacter(), undefined, 2));
-// console.log(new NewCharacter())
+console.log(JSON.stringify(x, undefined, 2));
