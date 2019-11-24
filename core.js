@@ -15,39 +15,39 @@ const validRaceList = ["dragonborn", "dwarf", "elf", "gnome", "half-elf", "half-
 
 // TODO: refactor, must be a cleaner way to do this
 //Takes a string representing a dice roll, such as "2d4" and returns a value in inches
-function returnHeightAndWeight(height, weight) {
+// function returnHeightAndWeight(height, weight) {
 
-  let rollAmountHeight = height.substring(0, height.indexOf('d'));
-  let diceTypeHeight   = height.substring(height.indexOf('d') +1);
+//   let rollAmountHeight = height.substring(0, height.indexOf('d'));
+//   let diceTypeHeight   = height.substring(height.indexOf('d') +1);
 
-  let rollAmountWeight = weight.substring(0, weight.indexOf('d'));
-  let diceTypeWeight   = weight.substring(weight.indexOf('d') +1);
+//   let rollAmountWeight = weight.substring(0, weight.indexOf('d'));
+//   let diceTypeWeight   = weight.substring(weight.indexOf('d') +1);
 
-  let sumOfRolls = null;
-  let heightWeight =[];
+//   let sumOfRolls = null;
+//   let heightWeight =[];
 
-  for (i = 1; i <= rollAmountHeight; i++){
-    sumOfRolls +=  utils.returnRandomNumberInRange(1,diceTypeHeight);
-  }
+//   for (i = 1; i <= rollAmountHeight; i++){
+//     sumOfRolls +=  utils.returnRandomNumberInRange(1,diceTypeHeight);
+//   }
 
-  //conversion from feet to inches, had to do some ugly stuff to stop super long floats
-  heightPrep = parseFloat((sumOfRolls / 12).toFixed(1));
-  heightPrep = heightPrep.toString().substring(0,2);
-  heightPrep = parseFloat(heightPrep);
-  heightWeight.push(heightPrep);
+//   //conversion from feet to inches, had to do some ugly stuff to stop super long floats
+//   heightPrep = parseFloat((sumOfRolls / 12).toFixed(1));
+//   heightPrep = heightPrep.toString().substring(0,2);
+//   heightPrep = parseFloat(heightPrep);
+//   heightWeight.push(heightPrep);
 
 
-  sumOfRolls = null; //reset sumOfRolls
+//   sumOfRolls = null; //reset sumOfRolls
 
-  for (j = 1; j <= rollAmountWeight; j++){
-    sumOfRolls +=  utils.returnRandomNumberInRange(1,diceTypeWeight);
-  }
+//   for (j = 1; j <= rollAmountWeight; j++){
+//     sumOfRolls +=  utils.returnRandomNumberInRange(1,diceTypeWeight);
+//   }
 
-  heightWeight.push(heightWeight[0] * sumOfRolls);
+//   heightWeight.push(heightWeight[0] * sumOfRolls);
 
-  return heightWeight;
+//   return heightWeight;
 
-}
+// }
 
 //returns a random alignment // TODO: make the assigned alignments fall in line with the player hand book guide
 function returnRandomAlignment() {
@@ -105,69 +105,154 @@ function applySubraceBonuses(char){
 
 }
 
+/**-------------------------------------------------------------------------------
+ * @description Calculates character `height`. The calculation adds a 'base height' 
+ * with a dice throw specific to each race. The base values are retrieve from:
+ *  https://www.reddit.com/r/DnD/comments/abebq0/chart_with_heightweight_ranges_and_averages_for/ 
+ * @param {String} race - the character race.
+ * @returns {Number} the calculated height in ft.  
+*///------------------------------------------------------------------------------
+function calculateCharacterHeight(race) {
+  let finalHeight = 0.0;
+  switch (race) {
+      case "dragonborn":
+          finalHeight = 5.6 + parseFloat((utils.diceThrow(2,8)/ 12).toFixed(1));
+      break;
+      case "dwarf":
+          finalHeight = 3.8 + parseFloat((utils.diceThrow(2,8)/ 12).toFixed(1));
+      break;
+      case "elf":
+          finalHeight = 4.6 + parseFloat((utils.diceThrow(2,10)/ 12).toFixed(1));
+      break;
+      case "gnome":
+          finalHeight = 2.11 + parseFloat((utils.diceThrow(2,4)/ 12).toFixed(1));
+      break;
+      case "half-elf":
+          finalHeight = 4.9 + parseFloat((utils.diceThrow(2,8)/ 12).toFixed(1));
+      break;
+      case "half-orc":
+          finalHeight = 4.10 + parseFloat((utils.diceThrow(2,10)/ 12).toFixed(1));
+      break;
+      case "halfling":
+          finalHeight = 2.7 + parseFloat((utils.diceThrow(2,4)/ 12).toFixed(1));
+      break;
+      case "human":
+          finalHeight = 4.8 + parseFloat((utils.diceThrow(2,10)/ 12).toFixed(1));
+      break;
+      case "tiefling":
+          finalHeight = 4.9 + parseFloat((utils.diceThrow(2,8)/ 12).toFixed(1));
+      break;
+      default: return "invalid race provided as function arguement [returnCharacterHeight()]";
+  }
+  return finalHeight;
+};
+
+/**-------------------------------------------------------------------------------
+ * @description Calculates character `weight`. The calculation adds a 'base height' 
+ * with a dice throw specific to each race. The base values are retrieve from:
+ *  https://www.reddit.com/r/DnD/comments/abebq0/chart_with_heightweight_ranges_and_averages_for/ 
+ * @param {String} race - the character race.
+ * @returns {Number} the calculated weight in lbs.  
+*///------------------------------------------------------------------------------
+function calculateCharacterWeight(race) {
+  let finalWeight = 0.0;
+  switch (race) {
+      case "dragonborn":
+        finalWeight = 175 + utils.diceThrow(2,6);
+      break;
+      case "dwarf":
+        finalWeight = 115 + utils.diceThrow(2,6);
+      break;
+      case "elf":
+        finalWeight = 90 + utils.diceThrow(2,4);
+      break;
+      case "gnome":
+        finalWeight = 35 + utils.diceThrow(2,4);
+      break;
+      case "half-elf":
+        finalWeight = 110 + utils.diceThrow(2,4);
+      break;
+      case "half-orc":
+        finalWeight = 140 + utils.diceThrow(2,6);
+      break;
+      case "halfling":
+        finalWeight = 35 + utils.diceThrow(2,4);
+      break;
+      case "human":
+        finalWeight = 110 + utils.diceThrow(2,4);
+      break;
+      case "tiefling":
+        finalWeight = 110 + utils.diceThrow(2,4);
+      break;
+      default: return "invalid race provided as function arguement [returnCharacterHeight()]";
+  }
+  return finalWeight;
+}
+//--------------------------------------------------------------
+
 // TODO: add subraces based on https://dnd5e.fandom.com/wiki/Character_Details
 // TODO: surely this can be refactored?
-function returnCharacterHeight(race) {
+// function returnCharacterHeight(race) {
 
-    let additionalHeightAndWeight = [];
+//     let additionalHeightAndWeight = [];
 
-    let heightAndWeight = [];
+//     let heightAndWeight = [];
 
-    switch (true) {
-        case race === "dragonborn":
-            additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d6");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 5.6 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 175 + " lbs";
-            break;
-        case race === "dwarf":
-            additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d6");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 3.8 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 115 + " lbs";
-            break;
-        case race === "elf":
-            additionalHeightAndWeight = returnHeightAndWeight("2d10", "1d4");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 4.6 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 90 + " lbs";
-            break;
-        case race === "gnome":
-            additionalHeightAndWeight = returnHeightAndWeight("2d4", "1d1");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 2.11 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 35 + " lbs";
-            break;
-        case race === "half-elf":
-            additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d4");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 4.9 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
-            break;
-        case race === "half-orc":
-            additionalHeightAndWeight = returnHeightAndWeight("2d10", "2d6");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 4.10 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 140 + " lbs";
-            break;
-        case race === "halfling":
-            additionalHeightAndWeight = returnHeightAndWeight("2d4", "1d1");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 2.7 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 35 + " lbs";
-            break;
-        case race === "human":
-            additionalHeightAndWeight = returnHeightAndWeight("2d10", "2d4");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 4.8 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
-            break;
-        case race === "tiefling":
-            additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d4");
-            heightAndWeight[0] = additionalHeightAndWeight[0] + 4.9 + " ft";
-            heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
-            break;
+//     switch (true) {
+//         case race === "dragonborn":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d6");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 5.6 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 175 + " lbs";
+//             break;
+//         case race === "dwarf":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d6");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 3.8 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 115 + " lbs";
+//             break;
+//         case race === "elf":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d10", "1d4");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 4.6 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 90 + " lbs";
+//             break;
+//         case race === "gnome":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d4", "1d1");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 2.11 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 35 + " lbs";
+//             break;
+//         case race === "half-elf":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d4");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 4.9 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
+//             break;
+//         case race === "half-orc":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d10", "2d6");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 4.10 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 140 + " lbs";
+//             break;
+//         case race === "halfling":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d4", "1d1");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 2.7 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 35 + " lbs";
+//             break;
+//         case race === "human":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d10", "2d4");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 4.8 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
+//             break;
+//         case race === "tiefling":
+//             additionalHeightAndWeight = returnHeightAndWeight("2d8", "2d4");
+//             heightAndWeight[0] = additionalHeightAndWeight[0] + 4.9 + " ft";
+//             heightAndWeight[1] = additionalHeightAndWeight[1] + 110 + " lbs";
+//             break;
 
-        default: return "invalid race provided as function arguement [returnCharacterHeight()]";
+//         default: return "invalid race provided as function arguement [returnCharacterHeight()]";
 
 
-    }
+//     }
 
-    return heightAndWeight;
+//     return heightAndWeight;
 
-}
+// }
 
 function returnDragonbornFeatures(draconicAncestry){
 
@@ -203,10 +288,6 @@ function applyDragonbornRaceBonuses() {
     character.racialAbilities = racial_traits.dragonborn_racial;
     character.languages = ["Common", "Draconic"];
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function applyDwarfRaceBonuses() {
@@ -217,9 +298,6 @@ function applyDwarfRaceBonuses() {
     character.languages = ["Common", "Dwarvish"];
     character.resistances = "Poison";
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
 }
 
 function applyElfRaceBonuses() {
@@ -230,10 +308,6 @@ function applyElfRaceBonuses() {
     character.languages = ["Common", "Elven"];
     character.resistances = null;
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function applyGnomeRaceBonuses() {
@@ -244,10 +318,6 @@ function applyGnomeRaceBonuses() {
     character.languages = ["Common", "Gnomish"];
     character.resistances = null;
     character.sizeClass = "Small";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function applyHalfElfRaceBonuses() {
@@ -271,10 +341,6 @@ function applyHalfElfRaceBonuses() {
     character.languages = ["Common", "Elven", returnRandomLanguage()];
     character.resistances = null;
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
   }
 
 function applyHalfOrcRaceBonuses() {
@@ -286,10 +352,6 @@ function applyHalfOrcRaceBonuses() {
     character.languages = ["Common", "Orcish"];
     character.resistances = null;
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function applyHalflingRaceBonuses() {
@@ -302,10 +364,6 @@ function applyHalflingRaceBonuses() {
     character.languages = ["Common", "Halfling"];
     character.resistances = null;
     character.sizeClass = "Small";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function applyHumanRaceBonuses() {
@@ -315,9 +373,6 @@ function applyHumanRaceBonuses() {
     character.languages = ["Common", returnRandomLanguage()];
     character.resistances = null;
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
 
 
     //Roll for variant rules
@@ -399,10 +454,6 @@ function applyTieflingRaceBonuses() {
     character.languages = ["Common", "Infernal"];
     character.resistances = "Fire";
     character.sizeClass = "Medium";
-    let heightWeight = returnCharacterHeight(character.race);
-    character.height = heightWeight[0];
-    character.weight = heightWeight[1];
-
 }
 
 function returnRandomLanguage() {
@@ -825,7 +876,13 @@ function NewCharacter(){
   this.abilityScores = returnAbilityScores(this.characterClass);
   returnCharacterAge(this);
   applySubraceBonuses(this);
+
   this.abilityScores = recalculateAbilityScoreModifiers(this.abilityScores);//Some racial traits increase ability scores so we have to recalculate
+
+      //let heightWeight = returnCharacterHeight(character.race);
+  this.height = String(calculateCharacterHeight(this.race)) + ' ft';
+  this.weight = String(calculateCharacterWeight(this.race)) + ' lbs'; 
+
   this.hitPoints = calculateFirstLevelHitPoints(this.characterClass.name, this.abilityScores.conMod);
   this.savingThrowScores = calculateSavingThrowScores(this.abilityScores, this.characterClass.savingThrows, this.proficiencyModifier);
   this.skillScores = calculateSkillScores(this.abilityScores, this.characterClass.skillProficiencies, this.proficiencyModifier);
@@ -907,3 +964,6 @@ if (!fs.existsSync(dir)){
   });
 
 }
+
+exports.calculateCharacterWeight = calculateCharacterWeight;
+exports.calculateCharacterHeight = calculateCharacterHeight;
