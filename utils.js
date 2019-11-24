@@ -38,6 +38,23 @@ function returnRandomObjectPropertiesAndValues(collection, ammount){
 
 }
 
+/**-------------------------------------------------------------------------------
+ * @description Calculates the value by number of dice and dice sides.
+ * Example: diceThrow(2,8) = 2d8 or diceThrow(10) = 1d6
+ * @param {Number} diceQuantity - integer for the quantity of dice to throw
+ * @param {Number} diceSides - integer for the number of sides 2, 4, 6, 8, 10, 12, 20, ...
+ * @returns {Number} integer with the result of dice throw.  
+*///------------------------------------------------------------------------------
+function diceThrow (diceQuantity = 1, diceSides) {
+  let result = 0;
+  for (let i = 0; i < diceQuantity; i+=1) {
+    result += Math.floor(Math.random() * parseInt(diceSides,10) ) + 1;
+  }
+  return result;
+}
+//--------------------------------------------------------------------------------
+
+exports.diceThrow = diceThrow;
 exports.returnRandomNumberInRange = returnRandomNumberInRange;
 exports.returnRandomFloatInRange = returnRandomFloatInRange;
 exports.returnRandomArrayItem = returnRandomArrayItem;
